@@ -9,12 +9,12 @@ declare(strict_types=1);
 
 namespace Divante\WorkflowBoardBundle\Service;
 
-use Divante\NotificationsBundle\Model\Notification;
 use Divante\WorkflowBoardBundle\Model;
 use Divante\WorkflowBoardBundle\DivanteWorkflowBoardBundle;
 use Pimcore\Model\Element\ElementInterface;
 use Pimcore\Model\Element\WorkflowState;
 use Pimcore\Model\Element\Service as ElementService;
+use Pimcore\Model\Notification\Service\NotificationService; 
 use Pimcore\Model\User;
 use Pimcore\Tool\Admin;
 
@@ -171,6 +171,8 @@ class Element
      */
     protected function sendNotificationToUser(string $title, string $message, int $user, ElementInterface $element)
     {
+        /*
+        TODO:Replace to Pimcore notification service   
         $fromUser = (int) Admin::getCurrentUser()->getId();
 
         $notification = new Notification();
@@ -180,6 +182,7 @@ class Element
         $notification->setUser($user);
         $notification->setLinkedElement($element);
         $notification->save();
+        */
     }
 
     /**

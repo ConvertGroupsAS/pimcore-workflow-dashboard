@@ -9,6 +9,7 @@ namespace Divante\WorkflowBoardBundle;
 
 use Pimcore\Extension\Bundle\Installer\InstallerInterface;
 use Pimcore\Extension\Bundle\AbstractPimcoreBundle;
+use Pimcore\Extension\Bundle\Traits\PackageVersionTrait;
 
 /**
  * Class DivanteWorkflowBoardBundle
@@ -16,8 +17,18 @@ use Pimcore\Extension\Bundle\AbstractPimcoreBundle;
  */
 class DivanteWorkflowBoardBundle extends AbstractPimcoreBundle
 {
+    use PackageVersionTrait;
+
     const PERMISSION_WORKFLOW_BOARD       = 'workflow_board';
     const PERMISSION_WORKFLOW_BOARD_ADMIN = 'workflow_board_admin';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getComposerPackageName()
+    {
+        return 'divante-ltd/workflow-board-bundle';
+    } 
 
     /**
      * @return null|InstallerInterface

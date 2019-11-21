@@ -18,8 +18,7 @@
     }
   ],
   "require": {
-    "pimcore/pimcore": "^5.4.0 | ^6.0.0",
-    "divante-ltd/pimcore5-notifications": "*"
+    "pimcore/pimcore": "^5.4.0 | ^6.0.0"
   },
   "autoload": {
     "psr-4": {
