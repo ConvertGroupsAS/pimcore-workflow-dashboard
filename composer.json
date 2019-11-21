@@ -18,7 +18,8 @@
     }
   ],
   "require": {
-    "pimcore/core-version": "^5.3.0"
+    "pimcore/pimcore": "^5.4.0 | ^6.0.0",
+    "divante-ltd/pimcore5-notifications": "*"
   },
   "autoload": {
     "psr-4": {
