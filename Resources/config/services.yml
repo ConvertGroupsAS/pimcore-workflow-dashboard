@@ -25,6 +25,8 @@ services:
 
     Divante\WorkflowBoardBundle\Service\Element:
         public: true
+        arguments:
+            - '@Pimcore\Model\Notification\Service\NotificationService'
 
     Divante\WorkflowBoardBundle\Installer:
         public: true

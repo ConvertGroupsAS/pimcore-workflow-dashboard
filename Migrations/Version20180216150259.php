@@ -10,29 +10,20 @@ namespace Divante\WorkflowBoardBundle\Migrations;
 use Divante\WorkflowBoardBundle\DivanteWorkflowBoardBundle;
 use Doctrine\DBAL\Schema\Schema;
 use Pimcore\Migrations\Migration\AbstractPimcoreMigration;
-use PimcoreDevkitBundle\Service\InstallerService;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Pimcore\Model\User;
 
 /**
  * Class Version20180216150259
  * @package Divante\WorkflowBoardBundle\Migrations
  */
-class Version20180216150259 extends AbstractPimcoreMigration implements ContainerAwareInterface
+class Version20180216150259 extends AbstractPimcoreMigration
 {
-    use ContainerAwareTrait;
-
-    /**
-     * @var InstallerService
-     */
-    protected $installerService;
-
     /**
      * @param Schema $schema
      */
     public function up(Schema $schema)
     {
-        $this->getInstallerService()->createPermission(DivanteWorkflowBoardBundle::PERMISSION_WORKFLOW_BOARD);
+        User\Permission\Definition::create(DivanteWorkflowBoardBundle::PERMISSION_WORKFLOW_BOARD);
     }
 
     /**
@@ -40,22 +31,5 @@ class Version20180216150259 extends AbstractPimcoreMigration implements Containe
      */
     public function down(Schema $schema)
     {
-    }
-
-    /**
-     * @return InstallerService
-     * @throws \UnexpectedValueException
-     */
-    protected function getInstallerService(): InstallerService
-    {
-        if ($this->installerService === null) {
-            $id = InstallerService::class;
-            if (!$this->container->has($id)) {
-                $message = sprintf("%s was not found", $id);
-                throw new \UnexpectedValueException($message);
-            }
-            $this->installerService = $this->container->get($id);
-        }
-        return $this->installerService;
     }
 }

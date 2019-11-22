@@ -59,10 +59,10 @@ class Element implements EventSubscriberInterface
             AssetEvents::POST_DELETE                => 'onPostDelete',
             DocumentEvents::POST_DELETE             => 'onPostDelete',
             DataObjectEvents::POST_DELETE           => 'onPostDelete',
-            WorkflowEvents::POST_ACTION             => 'onPostAction',
             AdminEvents::ASSET_GET_PRE_SEND_DATA    => 'onGetPreSendData',
             AdminEvents::DOCUMENT_GET_PRE_SEND_DATA => 'onGetPreSendData',
             AdminEvents::OBJECT_GET_PRE_SEND_DATA   => 'onGetPreSendData',
+            'workflow.completed'                    => 'onPostAction'
         ];
     }
 

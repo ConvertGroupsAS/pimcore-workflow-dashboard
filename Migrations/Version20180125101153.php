@@ -23,8 +23,7 @@ class Version20180125101153 extends AbstractPimcoreMigration
      */
     public function up(Schema $schema)
     {
-        $key = DivanteWorkflowBoardBundle::PERMISSION_WORKFLOW_BOARD_ADMIN;
-        User\Permission\Definition::create($key);
+        User\Permission\Definition::create(DivanteWorkflowBoardBundle::PERMISSION_WORKFLOW_BOARD_ADMIN);
     }
 
     /**

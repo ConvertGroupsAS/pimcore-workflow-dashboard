@@ -31,6 +31,20 @@ class Element
     const WORKFLOW_CHANGE_ASSIGN_GROUP_MESSAGE = 'Workflow: Element %s has been assigned to your group';
 
     /**
+     * @var NotificationService
+     */
+    protected $notificationService;
+
+    /**
+     * Element constructor.
+     * @param NotificationService $service
+     */
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
+
+    /**
      * @param int $workflowId
      * @param int $userId
      * @param int $offset
@@ -128,19 +142,19 @@ class Element
         $workflowElement->setAssignId($assignId);
         $workflowElement->save();
 
-        $elment = $this->getElement($ctype, (string) $cid);
-        if (!$elment instanceof ElementInterface) {
+        $element = $this->getElement($ctype, (string) $cid);
+        if (!$element instanceof ElementInterface) {
             throw new \UnexpectedValueException("No element found");
         }
 
         if (Model\Element::ASSIGN_TYPE_USER == $assignType) {
-            $title = sprintf(static::WORKFLOW_CHANGE_ASSIGN_USER_TITLE, $elment->getKey());
-            $message = sprintf(static::WORKFLOW_CHANGE_ASSIGN_USER_MESSAGE, $elment->getFullPath());
-            $this->sendNotificationToUser($title, $message, $assignId, $elment);
+            $title = sprintf(static::WORKFLOW_CHANGE_ASSIGN_USER_TITLE, $element->getKey());
+            $message = sprintf(static::WORKFLOW_CHANGE_ASSIGN_USER_MESSAGE, $element->getFullPath());
+            $this->sendNotificationToUser($title, $message, $assignId, $element);
         } elseif (Model\Element::ASSIGN_TYPE_ROLE == $assignType) {
-            $title = sprintf(static::WORKFLOW_CHANGE_ASSIGN_GROUP_TITLE, $elment->getKey());
-            $message = sprintf(static::WORKFLOW_CHANGE_ASSIGN_GROUP_MESSAGE, $elment->getFullPath());
-            $this->sendNotificationToRole($title, $message, $assignId, $elment);
+            $title = sprintf(static::WORKFLOW_CHANGE_ASSIGN_GROUP_TITLE, $element->getKey());
+            $message = sprintf(static::WORKFLOW_CHANGE_ASSIGN_GROUP_MESSAGE, $element->getFullPath());
+            $this->sendNotificationToRole($title, $message, $assignId, $element);
         }
 
         $this->commit();
@@ -154,13 +168,14 @@ class Element
      */
     protected function sendNotificationToRole(string $title, string $message, int $role, ElementInterface $element)
     {
-        $listing = new User\Listing();
-        $listing->setCondition("CONCAT(',', roles, ',') LIKE ?", '%,' . $role . ',%');
-        $listing->load();
-
-        foreach ($listing->getItems() as $user) {
-            $this->sendNotificationToUser($title, $message, (int) $user->getId(), $element);
-        }
+        $fromUser = (int) Admin::getCurrentUser()->getId();
+        $this->notificationService->sendToGroup(
+            $role,
+            $fromUser,
+            $title,
+            $message, 
+            $element
+        );
     }
 
     /**
@@ -171,18 +186,14 @@ class Element
      */
     protected function sendNotificationToUser(string $title, string $message, int $user, ElementInterface $element)
     {
-        /*
-        TODO:Replace to Pimcore notification service   
         $fromUser = (int) Admin::getCurrentUser()->getId();
-
-        $notification = new Notification();
-        $notification->setTitle($title);
-        $notification->setMessage($message);
-        $notification->setFromUser($fromUser);
-        $notification->setUser($user);
-        $notification->setLinkedElement($element);
-        $notification->save();
-        */
+        $this->notificationService->sendToUser(
+            $user,
+            $fromUser,
+            $title,
+            $message,
+            $element
+        );
     }
 
     /**
